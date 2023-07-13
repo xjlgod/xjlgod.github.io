@@ -16,26 +16,26 @@
   <meta name="author" content="XJl">
   <meta name="keywords" content="编程, 开发, Java">
   
-    <meta name="description" content="代码整洁之道 学习笔记，主要总结了这本书各个章节的要点并加了些个人看法（不全面），详细推荐看书">
+    <meta name="description" content="MySql中的父事务与子事务事务的范围事务的范围指的是事务的开始和结束位置。在MySQL中，事务可以通过以下语句来显式地开始和结束： 12345START TRANSACTION; -- 开始事务COMMIT; -- 提交事务ROLLBACK; -- 回滚事务 当在MySQL的一个事务中设置了事务隔离级别，该级别的设置将仅对当前事务有效。事务隔离级别定义了事务对数据的读取和修改的可见性和隔离程度。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="代码整洁之道 学习笔记">
-<meta property="og:url" content="http://xjl.info/2023/07/05/software/code-clean/index.html">
+<meta property="og:title" content="MySql中的父事务与子事务">
+<meta property="og:url" content="http://xjl.info/2023/07/13/mysql/transaction/index.html">
 <meta property="og:site_name" content="XJL博客">
-<meta property="og:description" content="代码整洁之道 学习笔记，主要总结了这本书各个章节的要点并加了些个人看法（不全面），详细推荐看书">
+<meta property="og:description" content="MySql中的父事务与子事务事务的范围事务的范围指的是事务的开始和结束位置。在MySQL中，事务可以通过以下语句来显式地开始和结束： 12345START TRANSACTION; -- 开始事务COMMIT; -- 提交事务ROLLBACK; -- 回滚事务 当在MySQL的一个事务中设置了事务隔离级别，该级别的设置将仅对当前事务有效。事务隔离级别定义了事务对数据的读取和修改的可见性和隔离程度。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://xjl-blog-pic.oss-cn-beijing.aliyuncs.com/cleanCode.png">
-<meta property="article:published_time" content="2023-07-05T11:37:25.000Z">
-<meta property="article:modified_time" content="2023-07-07T04:18:23.665Z">
+<meta property="article:published_time" content="2023-07-13T02:43:40.000Z">
+<meta property="article:modified_time" content="2023-07-13T03:15:04.846Z">
 <meta property="article:author" content="XJl">
-<meta property="article:tag" content="软件工程">
+<meta property="article:tag" content="MySql">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://xjl-blog-pic.oss-cn-beijing.aliyuncs.com/cleanCode.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>代码整洁之道 学习笔记 - XJL博客</title>
+  <title>MySql中的父事务与子事务 - XJL博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -195,13 +195,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('https://xjl-blog-pic.oss-cn-beijing.aliyuncs.com/cleanCode.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="代码整洁之道 学习笔记"></span>
+            <span id="subtitle" data-typed-text="MySql中的父事务与子事务"></span>
           
         </div>
 
@@ -212,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-05 19:37" pubdate>
-          2023年7月5日 晚上
+        <time datetime="2023-07-13 10:43" pubdate>
+          2023年7月13日 上午
         </time>
       </span>
     
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.5k 字
+          2.4k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          22 分钟
+          20 分钟
         
       </span>
     
@@ -273,102 +273,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">代码整洁之道 学习笔记</h1>
+            <h1 style="display: none">MySql中的父事务与子事务</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="代码整洁之道-学习笔记"><a href="#代码整洁之道-学习笔记" class="headerlink" title="代码整洁之道 学习笔记"></a>代码整洁之道 学习笔记</h1><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>阅读背景：</strong><br>代码整洁之道是我在蚂蚁集团实习时（后悔最后没留那里正式入职hh，相信命运的安排吧！），组长推荐给我阅读的。我看网上不少工作了几年的大佬都会推荐这本书给自己的新人读。代码作为我们程序员最直观的工作体现，我认为写的整洁、可读性强，且易于维护还是很重要的。</p>
-<p><strong>推荐理由：</strong><br>一个人在知晓了最好的实践方法时，会比不知晓的情况下去下意识的模仿这些最佳实践而写出的代码好的多。另外这本书所写的也不要认为都是对的，要去思考，软件工程没有永远的银弹。这本书中的一些理念在实际工作中可能也会被他人所不接受的，一切以自身的环境去考虑是否适用。</p>
-<p><strong>概述：</strong><br>《代码整洁之道》是软件开发领域的经典之作，作者Robert C. Martin（通常被称为Uncle Bob）是软件工程界的知名人物。该书的核心理念是通过编写整洁、可读性强且易于维护的代码来提高软件质量。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>以下内容按照整本书的目录进行浓缩总结而成，本书还是值得一看的，下面只是浓缩了一些要注意的很重要的理念。</p>
-<h2 id="整洁代码"><a href="#整洁代码" class="headerlink" title="整洁代码"></a>整洁代码</h2><ul>
-<li>编写整洁代码的价值在于提高可读性、可维护性和可扩展性。</li>
-<li>简洁性是整洁代码的核心，通过简化代码逻辑、减少重复和保持代码简单性，可以提高代码质量。</li>
-<li>可读性是指代码易于被理解和阅读。良好的命名、适当的注释和清晰的代码结构是实现可读性的关键。</li>
-<li>可维护性意味着代码易于修改和维护。通过遵循设计原则、拆分函数和类的责任以及提取可复用的代码，可以增强代码的可维护性。</li>
-<li><strong>保持代码整洁</strong>：每次签入时，代码都比签出时简洁。</li>
+                <h1 id="MySql中的父事务与子事务"><a href="#MySql中的父事务与子事务" class="headerlink" title="MySql中的父事务与子事务"></a>MySql中的父事务与子事务</h1><h2 id="事务的范围"><a href="#事务的范围" class="headerlink" title="事务的范围"></a>事务的范围</h2><p>事务的范围指的是事务的开始和结束位置。在MySQL中，事务可以通过以下语句来显式地开始和结束：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">START</span> TRANSACTION; <span class="hljs-comment">-- 开始事务</span><br><br><span class="hljs-keyword">COMMIT</span>; <span class="hljs-comment">-- 提交事务</span><br><br><span class="hljs-keyword">ROLLBACK</span>; <span class="hljs-comment">-- 回滚事务</span><br></code></pre></td></tr></table></figure>
+<p>当在MySQL的一个事务中设置了事务隔离级别，该级别的设置将仅对当前事务有效。事务隔离级别定义了事务对数据的读取和修改的可见性和隔离程度。事务隔离级别可以通过以下语句在MySQL中设置：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SET</span> TRANSACTION ISOLATION LEVEL <span class="hljs-operator">&lt;</span>isolation_level<span class="hljs-operator">&gt;</span>;<br></code></pre></td></tr></table></figure>
+<p>其中，**<isolation_level>**可以是以下之一：</p>
+<ul>
+<li><strong>READ UNCOMMITTED</strong>：允许脏读、不可重复读和幻读。</li>
+<li><strong>READ COMMITTED</strong>：禁止脏读，但允许不可重复读和幻读。</li>
+<li><strong>REPEATABLE READ</strong>：禁止脏读和不可重复读，但允许幻读。</li>
+<li><strong>SERIALIZABLE</strong>：禁止脏读、不可重复读和幻读。</li>
 </ul>
-<h2 id="命名"><a href="#命名" class="headerlink" title="命名"></a>命名</h2><ul>
-<li>使用有意义和描述性的命名可以使代码更易读、理解和维护。</li>
-<li>好的命名应该能够清晰地传达变量、函数和类的用途和含义。</li>
-<li>避免使用模糊的名称或缩写，而要选择具有明确含义的名称。</li>
-<li>保持一致的命名风格有助于代码的统一性和可读性（可以看看组里大家的规范）。</li>
-</ul>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ul>
-<li>函数应该短小、专注于单一任务，遵循单一职责原则（SRP），例如一个函数的for循环不能超过两行。</li>
-<li>短小的函数更易于理解和维护，有助于提高代码的可读性和可测试性。特别是在一个大型函数下，各个小型函数的良好使用能让你更好的知道运行流程。</li>
-<li>提取函数是一种常见的重构技术，可以将复杂的代码块拆分成更小、更易于理解的函数，ide的重构功能好好用起来。</li>
-<li>使用有意义的函数名和参数命名可以提高函数的可读性。</li>
-</ul>
-<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><ul>
-<li>注释应该解释代码的意图、背后的原因或特定的设计决策，而不是重复代码本身。</li>
-<li>避免过度注释，因为过多的注释可能会导致混乱和维护问题。</li>
-<li>编写自解释的代码是更好的选择，通过良好的命名和清晰的代码结构来提高代码的可读性。</li>
-<li>注释应该准确、简明扼要，并与代码保持同步。</li>
-<li>有些老系统的注释可能是误导，不要全信。</li>
-<li>不要为了注释而注释（我之前一个组就是这样，一个变量上再写这个变量的名字，好的一个注释完成了）。</li>
-</ul>
-<h2 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h2><ul>
-<li>代码的格式化和排版对于可读性和一致性非常重要（参照大家的格式，不要自己创建）。</li>
-<li>使用一致的缩进和空格风格，例如使用制表符或空格来缩进代码块。</li>
-<li>适当地使用空行和空格来增强代码的可读性和分组逻辑。</li>
-<li>避免过长的行和复杂的表达式，适当地换行和拆分可以提高代码的可读性。</li>
-</ul>
-<h2 id="对象和数据结构"><a href="#对象和数据结构" class="headerlink" title="对象和数据结构"></a>对象和数据结构</h2><ul>
-<li>对象和数据结构具有不同的设计原则和用途。对象：把数据隐藏于抽象后，提供函数调用；数据结构：暴露数据，没有有意义的函数提供。</li>
-<li>面向对象设计注重封装性和抽象性，隐藏内部实现细节，通过方法提供对数据的操作。</li>
-<li>数据结构更加简单直接，通常是将数据暴露给外部，而不提供行为方法。</li>
-<li>理解对象（例如领域业务）和数据结构（例如数据传输对象）之间的差异有助于选择适当的设计模式和实现方式。</li>
-</ul>
-<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><ul>
-<li>错误处理是软件开发中必不可少的一部分，良好的错误处理可以提高代码的可靠性和可维护性。</li>
-<li>明确处理错误并及时通知调用者是一种良好的实践。</li>
-<li>使用异常来处理错误情况，而不是简单地返回错误码或特殊值（当然你可以封装在错误里）。</li>
-<li>提供清晰、准确的错误消息，以便开发人员和用户能够理解错误的原因和解决方法。</li>
-<li>别轻易传递null，很容易出现一些莫名其妙的错误。</li>
-</ul>
-<h2 id="边界"><a href="#边界" class="headerlink" title="边界"></a>边界</h2><ul>
-<li>边界是系统与外部世界（如数据库、第三方服务）交互的地方。</li>
-<li>定义清晰的边界接口有助于隔离和管理与外部系统的交互（把外部调用给加一层，让系统依赖所加的这层）。</li>
-<li>使用适配器和封装代码来处理边界交互，确保代码的可读性和可维护性。</li>
-<li>避免直接依赖外部系统，使用抽象层将其封装起来。</li>
-</ul>
-<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
-<li>单元测试是保证代码质量的重要手段。</li>
-<li>编写可靠、独立和可重复执行的单元测试有助于发现和修复问题。</li>
-<li>使用测试驱动开发（TDD）方法（TDD建议好好学习），先编写测试用例，再编写代码以满足测试用例的需求。</li>
-<li>单元测试应该简洁、清晰明了，覆盖各种情况和边界条件。</li>
-<li>每个测试一个断言。</li>
-</ul>
-<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><ul>
-<li>类是面向对象编程的核心，它们应该具有清晰的目的和职责。</li>
-<li>遵循单一职责原则（SRP），每个类应该只负责一项任务。</li>
-<li>封装数据和隐藏实现细节，使用适当的访问修饰符来控制对类成员的访问。</li>
-<li>通过合理的类设计来提高代码的可读性和可维护性。</li>
-</ul>
-<h2 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h2><ul>
-<li>系统设计涉及模块划分、依赖关系和组织架构等方面。</li>
-<li>良好的系统设计应该有清晰的模块划分和合理的依赖关系，以便于理解和维护。</li>
-<li>使用适当的设计模式和架构原则来构建系统，例如依赖注入、领域驱动设计等。</li>
-<li>避免循环依赖和紧耦合的模块关系，通过松耦合和抽象化来增强系统的可扩展性。</li>
-</ul>
-<h2 id="迭代"><a href="#迭代" class="headerlink" title="迭代"></a>迭代</h2><ul>
-<li>迭进式开发是持续交付和持续改进的关键实践。</li>
-<li>迭进开发应该注重代码质量，避免技术债务的累积。</li>
-<li>频繁进行重构和代码优化，保持代码的整洁性和可维护性。</li>
-<li>使用持续集成和自动化测试来确保代码的质量和稳定性。</li>
-<li>简单设计规则：运行所有测试、不可重复、表达程序员的意图、尽可能减少类和方法数量。</li>
-</ul>
-<h2 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h2><ul>
-<li>理解并发编程模型和相关概念，如锁、信号量、线程池等。</li>
-<li>避免共享可变状态，使用线程安全的数据结构和同步机制。</li>
-<li>编写干净、安全的并发代码，避免出现竞态条件和死锁等问题。</li>
-<li>把并发代码与非并发代码分开，便于调试。</li>
-<li>并非代码的测试尽量全面。</li>
-</ul>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>本书最后给出了三章实践，但是由于排版问题和翻译问题（也可能是我自己的理解能力问题）。其实这三章看着比较吃力，大家看后也可以和我交流下。我认为掌握了书中之前的理念，自己在工作学习中一直坚持，肯定会有不一样的收获。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>书是好书，一些理念很实用，推荐一看。里面的案例分析如果读着不清晰，可以尝试找些其他的资料看看。</p>
+<p>一旦设置了事务隔离级别，该级别将在当前事务中生效，其他并发的事务将继续使用各自的隔离级别。这样可以确保每个事务在进行读取和修改时都遵循指定的隔离级别，从而提供一致的数据视图和隔离性。</p>
+<h2 id="父事务与子事务的传递"><a href="#父事务与子事务的传递" class="headerlink" title="父事务与子事务的传递"></a>父事务与子事务的传递</h2><p>在MySQL中，父事务和子事务之间的传递涉及到保存点（Savepoint）的概念。保存点是在事务中创建的标记，用于标识事务中的一个特定位置。通过保存点，我们可以在事务中实现更细粒度的回滚。<br>父事务可以创建保存点，并在子事务中回滚到保存点。这样，子事务可以恢复到保存点时的状态，包括隔离级别。父事务的隔离级别会被子事务继承，除非子事务显式地设置了自己的隔离级别。注意，并不是所有的数据库都支持保存点技术，如果不支持，通常会新建一个事务执行事务。<br>假设我们有两个表：<strong>Orders</strong>（订单）和 <strong>OrderItems</strong>（订单项）。在一个事务中插入一个订单和相关的订单项，并在插入订单项之后创建一个保存点。然后，启动一个子事务，在子事务中删除刚才插入的订单项，并回滚到保存点。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">START</span> TRANSACTION; <span class="hljs-comment">-- 开始父事务</span><br><br><span class="hljs-comment">-- 在父事务中插入订单和订单项</span><br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> Orders (order_id, order_date) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;2023-07-13&#x27;</span>);<br><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> OrderItems (order_id, item_id, quantity) <span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">10</span>);<br><span class="hljs-keyword">SAVEPOINT</span> my_savepoint; <span class="hljs-comment">-- 创建保存点</span><br><br><span class="hljs-comment">-- 启动子事务</span><br><span class="hljs-keyword">START</span> TRANSACTION; <span class="hljs-comment">-- 开始子事务</span><br><br><span class="hljs-comment">-- 在子事务中删除订单项</span><br><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> OrderItems <span class="hljs-keyword">WHERE</span> order_id <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br><span class="hljs-keyword">ROLLBACK</span> <span class="hljs-keyword">TO</span> <span class="hljs-keyword">SAVEPOINT</span> my_savepoint; <span class="hljs-comment">-- 回滚到保存点</span><br><br><span class="hljs-keyword">COMMIT</span>; <span class="hljs-comment">-- 提交子事务</span><br><br><span class="hljs-keyword">COMMIT</span>; <span class="hljs-comment">-- 提交父事务</span><br></code></pre></td></tr></table></figure>
+<p>在上述示例中，父事务设置了隔离级别为 <strong>REPEATABLE READ</strong>，而子事务没有显式设置隔离级别，因此继承了父事务的隔离级别。通过回滚到保存点，子事务恢复到保存点时的隔离级别，即 <strong>REPEATABLE READ</strong>。因此，删除操作在回滚后被撤销，订单项保留在数据库中。</p>
+<h2 id="Spring中的事务传播行为"><a href="#Spring中的事务传播行为" class="headerlink" title="Spring中的事务传播行为"></a>Spring中的事务传播行为</h2><p>事务传播行为定义了事务在方法调用链中的传播方式。Spring提供了多种事务传播行为选项来实现父事务与子事务的传播。如REQUIRED、REQUIRES_NEW、NESTED等。不同的传播行为对应不同的事务行为，能够满足各种业务需求。在Spring中，事务传播行为通过AOP和动态代理实现。Spring会在方法调用前后织入事务管理的逻辑，确保事务的正确传播和管理。（这里建议去看其他专门写Spring中的事务传播行为的博客）。<br>然而，由于Spring的事务传播行为通过AOP和动态代理实现，有一个常见的问题是自调用方法无法进行事务传递。即当一个方法内部自调用另一个方法时，实际上是在同一个类的实例中进行方法调用，而不是通过代理对象。因此，事务管理的拦截器无法拦截自调用方法，事务传播行为无法被应用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Service</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyService</span> &#123;<br><br>    <span class="hljs-meta">@Autowired</span><br>    <span class="hljs-keyword">private</span> MyService self;<br><br>    <span class="hljs-meta">@Transactional</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doSomething</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 事务传播行为将生效</span><br>        <span class="hljs-comment">// ...</span><br><br>        self.doSomethingElse(); <span class="hljs-comment">// 自调用方法，事务传播行为无效，无法代理</span><br><br>        <span class="hljs-comment">// ...</span><br>    &#125;<br><br>    <span class="hljs-meta">@Transactional(propagation = Propagation.REQUIRES_NEW)</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doSomethingElse</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 这个方法无法进行事务传递</span><br>        <span class="hljs-comment">// ...</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在上述示例中，doSomething()方法是一个事务方法，它调用了自身的doSomethingElse()方法。由于自调用无法进行事务传递，doSomethingElse()方法的事务传播行为将无效。<br>为了解决这个问题，有两种方式：</p>
+<ol>
+<li>将doSomethingElse()方法提取到一个独立的Bean中，并通过依赖注入的方式进行调用。这样，doSomethingElse()方法将通过代理对象进行调用，事务传播行为将得到正确应用。</li>
+<li>将doSomethingElse()中加入从Spring容器中直接取出代理Bean的操作代码，这样会对Spring Api造成强依赖。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在使用父事务与子事务时，需了解其原理。我们在日常开发中通常是直接使用第三方框架来调用这些事务，如Spring。</p>
 
                 
               </div>
@@ -387,8 +319,15 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/" class="category-chain-item">软件工程</a>
+  <a href="/categories/MySql/" class="category-chain-item">MySql</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/MySql/Java/" class="category-chain-item">Java</a>
+  
+  
+
   
 
       </span>
@@ -402,7 +341,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">#软件工程</a>
+        <a href="/tags/MySql/">#MySql</a>
+      
+        <a href="/tags/Spring/">#Spring</a>
+      
+        <a href="/tags/Java/">#Java</a>
       
     </div>
   
@@ -414,8 +357,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>代码整洁之道 学习笔记</div>
-      <div>http://xjl.info/2023/07/05/software/code-clean/</div>
+      <div>MySql中的父事务与子事务</div>
+      <div>http://xjl.info/2023/07/13/mysql/transaction/</div>
     </div>
     <div class="license-meta">
       
@@ -427,7 +370,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月5日</div>
+          <div>2023年7月13日</div>
         </div>
       
       
@@ -459,18 +402,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/13/mysql/transaction/" title="MySql中的父事务与子事务">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">MySql中的父事务与子事务</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/06/28/hello-world/" title="Hello World, 博客问世">
-                        <span class="hidden-mobile">Hello World, 博客问世</span>
+                      <a href="/2023/07/05/software/code-clean/" title="代码整洁之道 学习笔记">
+                        <span class="hidden-mobile">代码整洁之道 学习笔记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
