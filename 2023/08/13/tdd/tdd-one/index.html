@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="XJl">
+  <meta name="keywords" content="编程, 开发, Java">
+  
+    <meta name="description" content="根据《徐昊·TDD 项目实战70讲》课程进行学习，总结了课程中的概要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TDD项目实践（一）">
+<meta property="og:url" content="http://xjl.info/2023/08/13/tdd/tdd-one/index.html">
+<meta property="og:site_name" content="XJL博客">
+<meta property="og:description" content="根据《徐昊·TDD 项目实战70讲》课程进行学习，总结了课程中的概要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25510233/1691931822316-4b4f28ba-5551-42e8-a9b9-c0cfd1914677.png#averageHue=%23f8f5e4&clientId=ueb55a29c-e641-4&from=paste&id=u969229bd&originHeight=1285&originWidth=2284&originalType=url&ratio=1.5&rotation=0&showTitle=false&size=588546&status=done&style=none&taskId=ue8a7b2ae-fde6-41f3-a295-302edd379fb&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/png/25510233/1691932394736-17e3cd57-7640-4203-a764-8b3167459e53.png#averageHue=%23faf6e8&clientId=ueb55a29c-e641-4&from=paste&id=ua12a324e&originHeight=1286&originWidth=2283&originalType=url&ratio=1.5&rotation=0&showTitle=false&size=619742&status=done&style=none&taskId=u4295497a-7516-42d7-98d8-73596b246d6&title=">
+<meta property="article:published_time" content="2023-08-13T14:17:22.000Z">
+<meta property="article:modified_time" content="2023-08-13T14:39:35.546Z">
+<meta property="article:author" content="XJl">
+<meta property="article:tag" content="TDD(测试驱动设计)">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2023/png/25510233/1691931822316-4b4f28ba-5551-42e8-a9b9-c0cfd1914677.png#averageHue=%23f8f5e4&clientId=ueb55a29c-e641-4&from=paste&id=u969229bd&originHeight=1285&originWidth=2284&originalType=url&ratio=1.5&rotation=0&showTitle=false&size=588546&status=done&style=none&taskId=ue8a7b2ae-fde6-41f3-a295-302edd379fb&title=">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>TDD项目实践（一） - XJL博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"xjl.info","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>XJL个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于我</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TDD项目实践（一）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-13 22:17" pubdate>
+          2023年8月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">TDD项目实践（一）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="TDD项目实践（一）"><a href="#TDD项目实践（一）" class="headerlink" title="TDD项目实践（一）"></a>TDD项目实践（一）</h1><h1 id="学习背景"><a href="#学习背景" class="headerlink" title="学习背景"></a>学习背景</h1><p>学习原因：自己在开发过程中，一般都是先写总体架构模块，再写模块细节，最后写测试。但发现这样的开发方式有个问题，那就是最后自己在写测试时，总有一种惰性思维，觉得自己流程已经写好且能跑了，应该没有什么错了。写的测试也会根据自己所谓的“正确”思路进行展开，造成一些错误没有注意到。因此学习了TDD（Test-Driven Development，TDD），虽然这是一门很老的开发设计方式，但也被称之为最具效能的一种开发方式。</p>
+<p>使用资料：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/100109401?tab=catalog">徐昊 · TDD项目实战70讲_重构_测试驱动开发_TDD_单元测试_徐昊_徐八叉_伦敦学派_经典学派_Kent Beck_Clean Code_重构到模式-极客时间</a><br>总的来说，这个课程偏实战，目前只学了第一个项目，还在学第二个项目。老师真的对代码那种精益求精的态度，还有“出神入化”ide a适用技巧，跟着做一下还是能学到不少的。但有时老师的思维有点太快了，还是有点跟不上。</p>
+<p>个人相关repo：<br><a target="_blank" rel="noopener" href="https://github.com/xjlgod/geektime-tdd-learn">GitHub - xjlgod&#x2F;geektime-tdd-learn: 徐昊TDD项目实战 代码实现</a></p>
+<h1 id="TDD流程"><a href="#TDD流程" class="headerlink" title="TDD流程"></a>TDD流程</h1><p>验证测试与定位测试，贯穿了整个软件构造的过程。测试构成了整个开发流程的骨架，功能开发可以看作填充在测试与测试之间的血肉。这就是测试驱动开发的核心逻辑：以测试作为切入点，可以提纲挈领地帮助我们把握整个研发的过程。<br><img src="https://cdn.nlark.com/yuque/0/2023/png/25510233/1691931822316-4b4f28ba-5551-42e8-a9b9-c0cfd1914677.png#averageHue=%23f8f5e4&clientId=ueb55a29c-e641-4&from=paste&id=u969229bd&originHeight=1285&originWidth=2284&originalType=url&ratio=1.5&rotation=0&showTitle=false&size=588546&status=done&style=none&taskId=ue8a7b2ae-fde6-41f3-a295-302edd379fb&title=" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p>TDD的完整流程可以分为以下几步：</p>
+<ul>
+<li>理解需求，把需求分为一系列的功能点。</li>
+<li>根据功能点进行进一步上下文的划分，称之为功能上下文。</li>
+<li>实现每个功能上下午包含的任务项，首先编写测试，并实现为了通过测试的代码，不断重复此过程，重构代码。<ul>
+<li>红：编写一个失败的小测试，甚至可以是无法编译的测试；</li>
+<li>绿：让这个测试快速通过，甚至不惜犯下任何罪恶；</li>
+<li>重构：消除上一步中产生的所有重复（坏味道）。</li>
+</ul>
+</li>
+</ul>
+<p>在课程中，老师提出了一套任务分解法，将任务列表作为 TDD 的核心要素。</p>
+<ul>
+<li>大致构思软件被使用的方式，把握对外接口的方向；</li>
+<li>大致构思功能的实现方式，划分所需的组件（Component）以及组件间的关系（所谓的架构）。当然，如果没思路，也可以不划分；</li>
+<li>根据需求的功能描述拆分功能点，功能点要考虑正确路径（Happy Path）和边界条件（Sad Path）；</li>
+<li>依照组件以及组件间的关系，将功能拆分到对应组件；</li>
+<li>针对拆分的结果编写测试，进入红 &#x2F; 绿 &#x2F; 重构循环。那么 TDD 的整体工作流程如下图所示：</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/png/25510233/1691932394736-17e3cd57-7640-4203-a764-8b3167459e53.png#averageHue=%23faf6e8&clientId=ueb55a29c-e641-4&from=paste&id=ua12a324e&originHeight=1286&originWidth=2283&originalType=url&ratio=1.5&rotation=0&showTitle=false&size=619742&status=done&style=none&taskId=u4295497a-7516-42d7-98d8-73596b246d6&title=" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<h1 id="TDD中的测试方式"><a href="#TDD中的测试方式" class="headerlink" title="TDD中的测试方式"></a>TDD中的测试方式</h1><p>状态验证是指在与待测系统交互后，通过比对测试上下文与待测系统的状态变化，判断待测系统是否满足需求的验证方式。状态验证是一种黑盒验证，它将测试上下文与待测系统当作一个整体。当待测系统不存在内部状态，而通过作用于依赖组件（Depended On Component）达成功能的时候，我们会从依赖组件中获取状态，以验证待测系统。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CalculatorTest</span> &#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAdd</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Calculator</span> <span class="hljs-variable">calculator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Calculator</span>();<br>        calculator.add(<span class="hljs-number">5</span>);<br>        assertEquals(<span class="hljs-number">5</span>, calculator.getResult());<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSubtract</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Calculator</span> <span class="hljs-variable">calculator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Calculator</span>();<br>        calculator.subtract(<span class="hljs-number">3</span>);<br>        assertEquals(-<span class="hljs-number">3</span>, calculator.getResult());<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>行为验证是指通过待测系统与依赖组件（Depended On Component）的交互，来判断待测系统是否满足需求的验证方式。行为验证背后的逻辑是，状态的改变是由交互引起的。如果所有的交互都正确，那么就可以推断最终的状态也不会错。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.jupiter.api.Test;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.mockito.Mockito.*;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CalculatorTest</span> &#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAddBehavior</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Calculator</span> <span class="hljs-variable">calculator</span> <span class="hljs-operator">=</span> mock(Calculator.class);<br>        calculator.add(<span class="hljs-number">5</span>);<br>        verify(calculator).add(<span class="hljs-number">5</span>);<br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSubtractBehavior</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">Calculator</span> <span class="hljs-variable">calculator</span> <span class="hljs-operator">=</span> mock(Calculator.class);<br>        calculator.subtract(<span class="hljs-number">3</span>);<br>        verify(calculator).subtract(<span class="hljs-number">3</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p><strong>在 TDD 社区中，行为验证主要是为了降低测试成本。</strong> 状态验证是将测试上下文与待测系统当作一个整体的黑盒验证，而行为验证就是将它们看作分离组件的白盒验证。它的逻辑是通过测试功能是如何实现的，来推断结果是否正确。换句话说，行为验证本身并不能验证功能是否正确，而只能验证功能是否按照某种方式实现。如果按照某种方式实现，那么就可以推测出功能是正确的。这与 TDD 的核心逻辑就冲突了。在 TDD 的红 &#x2F; 绿 &#x2F; 重构中，重构要求在功能不变的前提下，改变实现方式。 <strong>而对于行为验证而言，实现方式改变就是功能改变</strong> 。因而重构就无法进行！需要重写！也就是说，<strong>行为验证会阻碍 TDD 的进行，应该使用状态验证。</strong><br>值得一提的是，TDD 中的测试不是行业中所谓的“单元测试”，而是 <strong>指能提供快速反馈的低成本的研发测试，也是针对不同粒度单元的功能测试</strong> 。我们要从发现问题和定位问题的角度出发，去理解和思考每一个测试的功效。</p>
+<h1 id="TDD的极限"><a href="#TDD的极限" class="headerlink" title="TDD的极限"></a>TDD的极限</h1><p>让 TDD 丧失驱动力最简单的办法，就是指明某个单元内的实现细节。比如，使用冒泡法对数组进行排序。因为从功能角度来说，冒泡法还是快排序，是没有差别的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">should_sort_by_bubble_sort</span><span class="hljs-params">()</span> &#123;<br>  assertArrayEquals(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[] &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;, bubbleSort(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>));<br>&#125;<br><br><span class="hljs-meta">@Test</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">should_sort_by_bubble_sort</span><span class="hljs-params">()</span> &#123;<br>  assertArrayEquals(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[] &#123;<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>&#125;, quickSort(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>));<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果我们需要在测试中体现不同排序算法的差异，以驱动不同的实现，那么就需要改用行为验证。测试驱动开发的主要关注点在于功能在单元（模块）间的分配，而对于模块内怎么实现，需要你有自己的想法。</p>
+<h1 id="TDD中的重构"><a href="#TDD中的重构" class="headerlink" title="TDD中的重构"></a>TDD中的重构</h1><p>TDD 是一种架构技术，它能通过测试与重构，驱动单元的划分以及功能的归属，因而是一种更为落地的架构软件的方式。<br>从功能测试出发，逐步完成软件开发，通过红 &#x2F; 绿 &#x2F; 重构循环中的重构，而不是预先设计（Upfront Design），完成功能的前提下慢慢演进出新的架构，因而也称演进式设计（Evlutionary Design）。通过重构到模式演进式地获得架构，是一种实效主义编码架构风格（Pragmatic Coding Architect）。</p>
+<h1 id="TDD的不同驱动方式"><a href="#TDD的不同驱动方式" class="headerlink" title="TDD的不同驱动方式"></a>TDD的不同驱动方式</h1><p>如果架构愿景不清晰， <strong>那么“最晚尽责时刻”让我们不必花费时间进行空对空的讨论，可以尽早开始实现功能，再通过重构从可工作的软件（Working Software）中提取架构。</strong> 这种方式也被称作 TDD 的经典学派（Classic School）或芝加哥学派（Chicago School）。<br>伦敦学派的做法是这样的：</p>
+<ul>
+<li>按照功能需求与架构愿景划分对象的角色和职责；</li>
+<li>根据角色与职责，明确对象之间的交互；</li>
+<li>按照调用栈（Call Stack）的顺序，自外向内依次实现不同的对象；</li>
+<li>在实现的过程中，依照交互关系，使用测试替身替换所有与被实现对象直接关联的对象；</li>
+<li>直到所有对象全部都实现完成。</li>
+</ul>
+<p>经典学派的做法是这样的：</p>
+<ul>
+<li>经典学派强调功能优先，设计 &#x2F; 架构后置，通过重构进行演进式设计。</li>
+<li>而“伦敦学派”并不排斥预先存在的设计，更强调如何通过测试替身，将注意力集中到功能上下文中的某个对象上。然后在测试的驱动下，按部就班地完成功能开发。</li>
+</ul>
+<p>如果一开始就有了很好的架构规划，可以采用伦敦学派的驱动方式。</p>
+<h1 id="TDD的工程优势"><a href="#TDD的工程优势" class="headerlink" title="TDD的工程优势"></a>TDD的工程优势</h1><p>使用 TDD 开发软件对人的要求，与其他所有软件工程方法对人的要求是一样的：理解需求，明白架构。但是 TDD 提供了这样几点在工程管理上的优势。</p>
+<ul>
+<li>第一，理解需求等于可以针对功能点写出测试。换句话说，写不出测试就是不理解需求。不理解需求就不要开发。在不理解需求的前提下开发功能点，只能带来负的进度。从工程管理角度上看，“判断一个人是否理解了需求”的成本极高。</li>
+<li>第二，不写测试，除了不会写测试之外，就是没理解需求。没理解需求就去写测试，那就是瞎干，瞎干不如不干。如果整个团队都写不出测试，那么说明这个需求无法通过可管控的工程化方式交付。</li>
+<li>第三，所有软件从业人士都认为架构是重要的，但却很少有人理解架构究竟是如何发挥作用的。架构并不是停留在纸面上的框图，而是约定了构成软件系统的组件，以及组件之间的交互方式。也就是说，架构是组件职责划分的依据以及组件的交互模式。 <strong>TDD 则可以通过功能上下文以及任务项拆分的情况，判断成员是否认同并理解了架构。</strong> 如果团队已经形成了架构共识，那么对于相同的功能点，团队中所有成员拆分出的功能上下文应该也相同。因而，从工程管理的角度，TDD 降低了“判断团队是否对架构达成了共识”的成本：看功能上下文拆分就行。</li>
+<li>第四，架构愿景很难在一开始就想得尽善尽美，随着需求发展，总会出现以当前架构愿景不容易实现的需求。如果硬拗进当前架构，就会出现不当的职责划分和别扭的组件交互，这只会加速架构的腐化。而“发现当前架构愿景不容易实现的需求”成本极高。 <strong>TDD 则可以通过功能上下文以及任务项拆分的情况，判断架构是否能够实现当前需求。</strong> 如果无法拆分出合理的功能上下文和任务项，那么这个需求，就是当前架构愿景不易实现的需求。因而，从工程管理的角度，TDD 降低了“发现当前架构愿景不容易实现的需求”的成本：看功能上下文拆分就行。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/TDD-%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/" class="category-chain-item">TDD(测试驱动设计)</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/TDD-%E6%B5%8B%E8%AF%95%E9%A9%B1%E5%8A%A8%E8%AE%BE%E8%AE%A1/">#TDD(测试驱动设计)</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TDD项目实践（一）</div>
+      <div>http://xjl.info/2023/08/13/tdd/tdd-one/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>XJl</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/13/mysql/transaction/" title="MySql中的父事务与子事务">
+                        <span class="hidden-mobile">MySql中的父事务与子事务</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
